@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Person extends Model
 {
-    use HasUuids;
+    use HasUuids,HasFactory;
 
     protected $fillable = [
         'first_name',
@@ -23,12 +24,12 @@ class Person extends Model
 
     public function employee()
     {
-        return $this->hasOne(Employee::class);
+        return $this->hasOne(Employee::class, 'id');
     }
 
     public function agent()
     {
-        return $this->hasOne(Agent::class);
+        return $this->hasOne(Agent::class, 'id');
     }
 
     public function user()

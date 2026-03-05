@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\TickedStatus;
 
 class StatusHistory extends Model
 {
+    use HasFactory;
+    
     protected $fillable = [
         'ticket_id',
         'previous_status',
@@ -16,12 +20,14 @@ class StatusHistory extends Model
     ];
 
     protected $casts = [
-        'changed_at' => 'datetime'
-    ];
+    'previous_status' => TickedStatus::class,
+    'new_status' => TickedStatus::class,
+    'changed_at' => 'datetime',
+];
 
     public function ticket()
     {
-        return $this->belongsTo(Ticked::class);
+        return $this->belongsTo(Ticked::class, 'ticked_id');
     }
 
     public function agent()
