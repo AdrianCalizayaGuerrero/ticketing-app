@@ -8,43 +8,62 @@ use Illuminate\Http\Request;
 
 class AgentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $agents = Agent::with('person')->paginate(10);
+
+        return response()->json($agents);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'person_id' => 'required|exists:people,id',
+            'employee_code' => 'required|string|unique:agents,employee_code',
+            'is_available' => 'boolean'
+        ]);
+
+        $agent = Agent::create([
+            'id' => $data['person_id'],
+            'employee_code' => $data['employee_code'],
+            'is_available' => $data['is_available'] ?? true
+        ]);
+
+        return response()->json(
+            $agent->load('person'),
+            201
+        );
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Agent $agent)
     {
-        //
+        return response()->json(
+            $agent->load(['person', 'assignedTickets'])
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, Agent $agent)
     {
-        //
+        $data = $request->validate([
+            'employee_code' => 'sometimes|string|unique:agents,employee_code,' . $agent->id,
+            'is_available' => 'boolean'
+        ]);
+
+        $agent->update($data);
+
+        return response()->json($agent->load('person'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Agent $agent)
     {
-        //
+        $agent->delete();
+
+        return response()->json([
+            'message' => 'Agent removed'
+        ]);
     }
 }

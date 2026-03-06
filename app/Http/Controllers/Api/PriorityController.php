@@ -8,43 +8,56 @@ use Illuminate\Http\Request;
 
 class PriorityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $priorities = Priority::orderBy('weight', 'desc')->paginate(10);
+
+        return response()->json($priorities);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'level' => 'required|string|max:50|unique:priorities,level',
+            'weight' => 'required|integer|min:0',
+            'is_active' => 'boolean'
+        ]);
+
+        $priority = Priority::create($data);
+
+        return response()->json($priority, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Priority $priority)
     {
-        //
+        return response()->json(
+            $priority->load('tickets')
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, Priority $priority)
     {
-        //
+        $data = $request->validate([
+            'level' => 'sometimes|string|max:50|unique:priorities,level,' . $priority->id,
+            'weight' => 'sometimes|integer|min:0',
+            'is_active' => 'boolean'
+        ]);
+
+        $priority->update($data);
+
+        return response()->json($priority);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Priority $priority)
     {
-        //
+        $priority->delete();
+
+        return response()->json([
+            'message' => 'Priority deleted'
+        ]);
     }
 }

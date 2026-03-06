@@ -8,43 +8,64 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+public function index()
     {
-        //
+        $employees = Employee::with('person')->paginate(10);
+
+        return response()->json($employees);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'person_id' => 'required|exists:people,id',
+            'department' => 'required|string|max:255',
+            'position' => 'nullable|string|max:255'
+        ]);
+
+        $employee = Employee::create([
+            'id' => $data['person_id'],
+            'department' => $data['department'],
+            'position' => $data['position']
+        ]);
+
+        return response()->json(
+            $employee->load('person'),
+            201
+        );
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Employee $employee)
     {
-        //
+        return response()->json(
+            $employee->load(['person', 'reportedTickets'])
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, Employee $employee)
     {
-        //
+        $data = $request->validate([
+            'department' => 'sometimes|string|max:255',
+            'position' => 'nullable|string|max:255'
+        ]);
+
+        $employee->update($data);
+
+        return response()->json(
+            $employee->load('person')
+        );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+
+        return response()->json([
+            'message' => 'Employee removed'
+        ]);
     }
 }

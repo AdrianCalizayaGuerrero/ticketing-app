@@ -4,22 +4,22 @@ Sistema de gestión de tickets para soporte técnico interno desarrollado con **
 
 Permite gestionar:
 
-* Empleados (reporters)
-* Agentes
-* Tickets
-* Categorías y prioridades
-* Historial de estados
-* Mensajes internos y públicos
+- Empleados (reporters)
+- Agentes
+- Tickets
+- Categorías y prioridades
+- Historial de estados
+- Mensajes internos y públicos
 
 ---
 
 ## 🛠 Requisitos
 
-* PHP >= 8.2
-* Composer
-* MySQL / MariaDB
-* Laravel 11+
-* Extensión PDO habilitada
+- PHP >= 8.2
+- Composer
+- MySQL / MariaDB
+- Laravel 11+
+- Extensión PDO habilitada
 
 ---
 
@@ -79,14 +79,14 @@ php artisan migrate --seed
 
 Esto generará:
 
-* Personas
-* Empleados
-* Agentes
-* Categorías
-* Prioridades
-* Tickets
-* Historial de estados
-* Mensajes relacionados
+- Personas
+- Empleados
+- Agentes
+- Categorías
+- Prioridades
+- Tickets
+- Historial de estados
+- Mensajes relacionados
 
 ---
 
@@ -123,11 +123,11 @@ App\Models\Message::count();
 
 ## 🏗 Arquitectura
 
-* UUID como claves primarias
-* Factories y Seeders coherentes
-* Relaciones Eloquent bien definidas
-* Enum para estados de ticket
-* Separación entre Person, Employee y Agent
+- UUID como claves primarias
+- Factories y Seeders coherentes
+- Relaciones Eloquent bien definidas
+- Enum para estados de ticket
+- Separación entre Person, Employee y Agent
 
 ---
 
@@ -141,4 +141,9 @@ php artisan migrate:fresh --seed
 
 ---
 
-Desarrollado por **Adrian Calizaya**
+Desarrollado por:
+**Los Pasageros**
+
+- Adrian Calizaya
+- Amigo de Adriana
+- Adriana ...

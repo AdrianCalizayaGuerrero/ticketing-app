@@ -9,9 +9,9 @@ use App\Enums\TickedStatus;
 class StatusHistory extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
-        'ticket_id',
+        'ticked_id',
         'previous_status',
         'new_status',
         'comment',
@@ -20,10 +20,10 @@ class StatusHistory extends Model
     ];
 
     protected $casts = [
-    'previous_status' => TickedStatus::class,
-    'new_status' => TickedStatus::class,
-    'changed_at' => 'datetime',
-];
+        'previous_status' => TickedStatus::class,
+        'new_status' => TickedStatus::class,
+        'changed_at' => 'datetime',
+    ];
 
     public function ticket()
     {
