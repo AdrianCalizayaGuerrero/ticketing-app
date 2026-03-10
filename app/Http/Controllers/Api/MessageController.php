@@ -8,60 +8,43 @@ use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
-    // GET /api/messages
     public function index()
     {
-        $messages = Message::with(['ticket', 'author'])->get();
-        return response()->json($messages);
+        return response()->json(Message::with(['author.person'])->get());
     }
 
-    // POST /api/messages
     public function store(Request $request)
     {
-        $request->validate([
-            'content' => 'required|string',
+        $user = $request->user();
+
+        $data = $request->validate([
+            'content'     => 'required|string',
             'is_internal' => 'boolean',
-            'ticket_id' => 'required|exists:tickets,id',
-            'author_id' => 'required|exists:users,id'
+            'ticked_id'   => 'required|exists:tickeds,id',
         ]);
 
-        $message = Message::create($request->all());
+        $data['author_id'] = $user->id;
 
-        return response()->json($message, 201);
+        $message = Message::create($data);
+
+        return response()->json($message->load('author.person'), 201);
     }
 
-    // GET /api/messages/{id}
     public function show($id)
     {
-        $message = Message::with(['ticket', 'author'])->findOrFail($id);
-
-        return response()->json($message);
+        return response()->json(Message::with(['author.person'])->findOrFail($id));
     }
 
-    // PUT /api/messages/{id}
     public function update(Request $request, $id)
     {
         $message = Message::findOrFail($id);
-
-        $request->validate([
-            'content' => 'sometimes|string',
-            'is_internal' => 'boolean'
-        ]);
-
-        $message->update($request->all());
-
+        $message->update($request->validate(['content' => 'required|string']));
         return response()->json($message);
     }
 
-    // DELETE /api/messages/{id}
     public function destroy($id)
     {
-        $message = Message::findOrFail($id);
-
-        $message->delete();
-
-        return response()->json([
-            'message' => 'Message deleted successfully'
-        ]);
+        Message::findOrFail($id)->delete();
+        return response()->json(['message' => 'Mensaje eliminado']);
     }
 }
